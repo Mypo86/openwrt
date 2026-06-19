@@ -1,7 +1,10 @@
 name: Build OpenWrt Hiveton H5000M
 
 on:
-  workflow_dispatch: # Позволяет запускать сборку вручную кнопкой
+  workflow_dispatch:
+  push:
+    branches:
+      - hiveton-h5000m
 
 jobs:
   build:
@@ -11,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: hiveton-h5000m # Указываем конкретную ветку
+        ref: hiveton-h5000m
 
     - name: Install Build Dependencies
       run: |
@@ -27,10 +30,6 @@ jobs:
 
     - name: Generate Default Configuration
       run: |
-        # Здесь мы создаем базовый конфиг. 
-        # Если вы знаете точный Target профиль роутера, его можно вписать ниже.
-        # Например: echo "CONFIG_TARGET_ramips=y" > .config
-        # Если профиль неизвестен, этот шаг создаст дефолтный конфиг для архитектуры.
         make defconfig
 
     - name: Download Package Sources
@@ -39,11 +38,10 @@ jobs:
 
     - name: Compile Firmware
       run: |
-        # Сборка в 2 потока для стабильности на серверах GitHub
         make -j2 V=s
 
     - name: Upload Artifacts
-      uses: actions/artifacts@v4
+      uses: actions/upload-artifact@v4
       with:
         name: OpenWrt_Firmware
         path: bin/targets/

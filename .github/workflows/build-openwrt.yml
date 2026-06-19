@@ -43,7 +43,7 @@ jobs:
         make -j2 V=s
 
     - name: Upload Artifacts
-      uses: aactions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: OpenWrt_Firmware
         path: bin/targets/
